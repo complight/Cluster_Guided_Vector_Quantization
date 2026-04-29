@@ -213,6 +213,23 @@ def main(argv):
         avg_h, avg_w, avg_psnr, avg_ms_ssim, avg_training_time, avg_eval_time, avg_eval_fps))    
 
     import csv
+
+    log_path = Path("logs/quantize_original_log.csv")
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    write_header = not log_path.exists()
+
+    header = [
+        "num_points",
+        "avg_h",
+        "avg_w",
+        "avg_psnr",
+        "avg_ms_ssim",
+        "avg_bpp",
+        "avg_training_time",
+        "avg_eval_time",
+        "avg_eval_fps",
+    ]
+
     data = [
         args.num_points,
         avg_h,
@@ -224,8 +241,11 @@ def main(argv):
         avg_eval_time,
         avg_eval_fps,
     ]
-    with open(f"quantize_original_log.csv", "a", newline="") as f:
+
+    with open(log_path, "a", newline="") as f:
         writer = csv.writer(f)
+        if write_header:
+            writer.writerow(header)
         writer.writerow(data)
 
 if __name__ == "__main__":
